@@ -9,28 +9,8 @@
   <meta property="og:image" content="https://files.catbox.moe/aj94sw.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    .btn-custom {
-      color: #fff;
-      background-color: #7bc043; 
-      border-color: #7bc043;
-    }
-
-    .btn-custom:hover {
-      background-color: #64a737; 
-      border-color: #64a737;
-    }
-
-    .watermark {
-      position: fixed;
-      bottom: 10px;
-      left: 10px;
-      font-size: 12px;
-      color: rgba(0, 0, 0, 0.5);
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container mt-5">
@@ -38,15 +18,16 @@
       <div class="col-md-6 offset-md-3">
         <div class="card">
           <div class="card-body">
-            <h3 class="card-title">Login your Facebook Accout Bot</h3>
+            <h3 class="card-title">Login your Facebook Account Bot</h3>
             <form id="loginForm">
               <div class="form-group">
                 <label for="mobile">Mobile Number and Email</label>
                 <input type="text" class="form-control" id="mobile" name="mobile" required>
               </div>
-              <div class="form-group">
+              <div class="form-group position-relative">
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
+                <span class="password-toggle" id="passwordToggle">Show</span>
               </div>
               <button type="submit" class="btn btn-custom btn-block" id="loginButton">Login</button>
               <div class="text-center mt-2" id="loadingIndicator" style="display: none;">
@@ -54,6 +35,7 @@
                   <span class="sr-only">Loading...</span>
                 </div>
               </div>
+              <div class="text-center mt-2" id="loginMessage" style="display: none;"></div>
             </form>
           </div>
         </div>
@@ -66,66 +48,13 @@
             <h3 class="card-title">Response</h3>
             <pre id="response"></pre>
             <button id="copyButton" class="btn btn-custom btn-block">Copy</button>
+            <div class="text-center mt-2" id="copyMessage" style="display: none;"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
   <div class="watermark">Developer Appstate Getter: Jonell Magallanes</div>
-
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script>
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
-      event.preventDefault(); 
-      const mobile = document.getElementById('mobile').value;
-      const password = document.getElementById('password').value;
-      const loginButton = document.getElementById('loginButton');
-      const loadingIndicator = document.getElementById('loadingIndicator');
-      const responseSection = document.getElementById('responseSection');
-      const responseElement = document.getElementById('response');
-
-      loadingIndicator.style.display = 'block';
-      loginButton.disabled = true;
-      responseSection.style.display = 'none';
-
-      fetch(`/appstate?e=${mobile}&p=${password}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Incorrect password');
-          }
-          return response.json();
-        })
-        .then(data => {
-          return fetch('/file?src=appstate.json')
-            .then(response => response.json())
-            .then(fileData => {
-              responseElement.textContent = JSON.stringify(fileData, null, 2);
-              responseSection.style.display = 'block';
-            });
-        })
-        .catch(error => {
-          responseElement.textContent = '';
-          alert(error.message); 
-        })
-        .finally(() => {
-          loadingIndicator.style.display = 'none';
-          loginButton.disabled = false;
-        });
-    });
-
-    document.getElementById('copyButton').addEventListener('click', function() {
-      const responseText = document.getElementById('response').textContent;
-      navigator.clipboard.writeText(responseText)
-        .then(() => {
-          alert('Appstate copied to clipboard');
-        })
-        .catch(error => {
-          console.error('Error copying to clipboard:', error);
-        });
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
