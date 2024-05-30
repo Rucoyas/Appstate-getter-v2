@@ -15,21 +15,38 @@ app.get('/appstate', (req, res) => {
     return res.status(400).send({ error: 'Email and password query parameters are required' });
   }
 
+  const filename = 'appstate.json';
+
+
+  if (fs.existsSync(filename)) {
+    return res.status(400).send({ error: 'appstate.json already exists' });
+  }
+
   appstate({ email, password }, (err, api) => {
     if (err) {
       console.error('Error in appstate:', err);
       return res.status(401).send({ error: err.message });
     } else {
       try {
-        const result = api.getAppState();  // Correctly getting the app state
+        const result = api.getAppState();
         const results = JSON.stringify(result, null, 2);
-        const filename = `appstate.json`;
 
         fs.writeFileSync(filename, results);
-        console.log(results);
+        console.log('[FCA-PROJECT-ORION] > Currently logged ...');
 
         res.type('json').send({ success: results });
         api.logout();
+
+        setTimeout(() => {
+          fs.unlink(filename, (err) => {
+            if (err) {
+              console.error('Error deleting appstate.json:', err);
+            } else {
+              console.log('appstate.json deleted successfully');
+            }
+          });
+        }, 16000);
+
       } catch (e) {
         console.error('Error processing result:', e);
         res.status(500).json({ error: e.message });
@@ -57,7 +74,6 @@ app.get('/file', (req, res) => {
   });
 });
 
-// Gracefully handle unexpected errors
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
 });
