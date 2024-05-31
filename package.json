@@ -13,7 +13,7 @@
   "dependencies": {
     "@types/node": "^18.0.6",
     "express": "^4.19.2",
-    "fca-project-orion": "^1.1.22",
-    "fbkey": "^1.0.1"
+    "fbkey": "^1.0.1",
+    "fca-project-orion": "^1.1.22"
   }
 }
