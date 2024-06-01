@@ -21,12 +21,8 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
       return response.json();
     })
     .then(data => {
-      return fetch('/file?src=appstate.json')
-        .then(response => response.json())
-        .then(fileData => {
-          responseElement.textContent = JSON.stringify(fileData, null, 2);
-          responseSection.style.display = 'block';
-        });
+      responseElement.textContent = JSON.stringify(data, null, 2);
+      responseSection.style.display = 'block';
     })
     .catch(error => {
       responseElement.textContent = '';
@@ -63,3 +59,4 @@ document.getElementById('passwordToggle').addEventListener('click', function() {
     toggleText.textContent = 'Show';
   }
 });
+    
