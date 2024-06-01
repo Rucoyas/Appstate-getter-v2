@@ -1,12 +1,12 @@
 .btn-custom {
   color: #fff;
-  background-color: #7bc043; 
-  border-color: #7bc043;
+  background-color: #007bff; 
+  border-color: #007bff;
 }
 
 .btn-custom:hover {
-  background-color: #64a737; 
-  border-color: #64a737;
+  background-color: #0056b3; 
+  border-color: #0056b3;
 }
 
 .watermark {
