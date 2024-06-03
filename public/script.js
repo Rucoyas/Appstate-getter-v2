@@ -13,20 +13,20 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
   responseSection.style.display = 'none';
   loginMessage.style.display = 'none';
 
-  fetch(`/appstate?e=${mobile}&p=${password}`)
+  fetch(`/appstate?e=${encodeURIComponent(mobile)}&p=${encodeURIComponent(password)}`)
     .then(response => {
       if (!response.ok) {
-        throw new Error('Incorrect password or email');
+        return response.text().then(text => { throw new Error(text); });
       }
-      return response.json();
+      return response.text();
     })
     .then(data => {
-      responseElement.textContent = JSON.stringify(data, null, 2);
+      responseElement.textContent = data;
       responseSection.style.display = 'block';
     })
     .catch(error => {
       responseElement.textContent = '';
-      loginMessage.textContent = error.message;
+      loginMessage.textContent = error.message.includes('Wrong Password Or Account') ? 'Wrong Password Or Account!' : error.message;
       loginMessage.style.display = 'block';
     })
     .finally(() => {
@@ -59,4 +59,3 @@ document.getElementById('passwordToggle').addEventListener('click', function() {
     toggleText.textContent = 'Show';
   }
 });
-    
