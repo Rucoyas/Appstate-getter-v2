@@ -1,31 +1,7 @@
+const appstate = require('fca-project-orion');
 const express = require('express');
-const axios = require('axios');
+const path = require('path');
 const app = express();
-const port = process.env.PORT || 3030;
-
-app.use(express.static('public'));
-
-app.get('/appstate', async (req, res) => {
-  const email = req.query.e;
-  const password = req.query.p;
-
-  if (!email || !password) {
-    return res.status(400).send({ error: 'Email and password query parameters are required' });
-  }
-
-  try {
-    const response = await axios.get(`https://fca-base-appstate.replit.app/shiki?email=${email}&password=${password}`);
-
-    if (response.data.error) {
-      return res.status(401).send({ error: response.data.error });
-    }
-
-    res.type('json').send(response.data);
-  } catch (err) {
-    console.error('Error in axios request:', err);
-    res.status(401).send({ error: 'Authentication failed. Please check your email and password.' });
-  }
-});
 
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
@@ -35,6 +11,38 @@ process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+// Serve static files (e.g., CSS, JS)
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/appstate', (req, res) => {
+  const email = req.query.e;
+  const password = req.query.p;
+
+  if (!email || !password) {
+    return res.status(400).send('Email and password query parameters are required');
+  }
+
+  appstate({ email, password }, (err, api) => {
+    if (err) {
+      console.error('Error in appstate:', err);
+      return res.status(401).send(err.error || 'Authentication failed');
+    } else {
+      try {
+        const result = api.getAppState();  
+        res.send(result);
+      } catch (err) {
+        console.error('Error getting app state:', err);
+        res.status(500).send('Internal Server Error');
+      }
+    }
+  });
+});
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
