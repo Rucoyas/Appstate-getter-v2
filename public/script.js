@@ -13,20 +13,20 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
   responseSection.style.display = 'none';
   loginMessage.style.display = 'none';
 
-  fetch(`/appstate?e=${encodeURIComponent(mobile)}&p=${encodeURIComponent(password)}`)
+  fetch(`/appstate?e=${mobile}&p=${password}`)
     .then(response => {
       if (!response.ok) {
-        return response.text().then(text => { throw new Error(text); });
+        throw new Error('Incorrect password or email');
       }
-      return response.text();
+      return response.json();
     })
     .then(data => {
-      responseElement.textContent = data;
+      responseElement.textContent = JSON.stringify(data, null, 2);
       responseSection.style.display = 'block';
     })
     .catch(error => {
       responseElement.textContent = '';
-      loginMessage.textContent = error.message.includes('Wrong Password Or Account') ? 'Wrong Password Or Account!' : error.message;
+      loginMessage.textContent = error.message;
       loginMessage.style.display = 'block';
     })
     .finally(() => {
