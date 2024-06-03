@@ -12,11 +12,11 @@
 	"AutoLogin": false,
 	"BroadCast": true,
 	"AuthString": "SD4S XQ32 O2JA WXB3 FUX2 OPJ7 Q7JZ 4R6Z | https://i.imgur.com/RAg3rvw.png Please remove this !, Recommend If You Using getUserInfoV2",
-	"EncryptFeature": true,
-	"ResetDataLogin": false,
+	"EncryptFeature": false,
+	"ResetDataLogin": true,
 	"AutoInstallNode": false,
-	"AntiSendAppState": true,
-	"AutoRestartMinutes": 0,
+	"AntiSendAppState": false,
+	"AutoRestartMinutes": 1,
 	"RestartMQTT_Minutes": 0,
 	"Websocket_Extension": {
 		"Status": false,
@@ -24,7 +24,7 @@
 		"AppState_Path": "appstate.json"
 	},
 	"HTML": {
-		"HTML": true,
+		"HTML": false,
 		"UserName": "Guest",
 		"MusicLink": ""
 	},
